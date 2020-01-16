@@ -35,6 +35,9 @@ class NNKernelElu(NNKernel):
             x2_none=False):
         """
         Kernel for a single layer
+
+        Args:
+            x1norm (nparray): 
         """
         k_relu = self.kernel_relu._single_layer_K(x1norm, x2norm, x1sum, x2sum, 
                 cos_theta, x2_none)
@@ -43,7 +46,7 @@ class NNKernelElu(NNKernel):
             E4 = \
                 self._E4(x1norm, x2norm, cos_theta, x2_none) - \
                 self._E4(x1norm, 0*x2norm,      cos_theta, x2_none) - \
-                self._E4(0*x1norm.T,      x2norm.T, cos_theta.T, x2_none).T + \
+                self._E4(0*x1norm,      x2norm, cos_theta, x2_none) + \
                 self._E4(0*x1norm,      0*x2norm,      cos_theta, x2_none)
         else:
             E4 = \
@@ -54,11 +57,12 @@ class NNKernelElu(NNKernel):
 
     
         E2 = self._E2(x1norm, x2norm, cos_theta, x2_none)
-        
+       
         if not (type(cos_theta) is int):
             E3 = self._E2(x2norm.T, x1norm.T, cos_theta.T, x2_none).T
         else:
             E3 = self._E2(x2norm, x1norm, cos_theta, x2_none)
+
 
         E1 = k_relu
         
@@ -86,6 +90,7 @@ class NNKernelElu(NNKernel):
         elif b.shape[1] == m:
             b = np.tile(b, (n,1))
             a = np.tile(a, (1,m))
+       
 
         mu1 = a + b*cos_theta
         mu2 = a*cos_theta + b

@@ -140,7 +140,8 @@ def plot_posterior_samples(samples, name='posterior_samples.pdf', close=False,
         plt.close()
 
 def plot_gp(mus, sigmas, test_x, test_y=None, train_x=None, train_y=None, 
-        fig=None, name='gp.pdf', color='b', num_samples = 10000):
+        fig=None, name='gp.pdf', color='b', num_samples = 10000, 
+        axis_on = False):
     """
     Plot regression training data, testing data, mean and quantiles of a 
     mixture of m equal weighted Gaussian processes.
@@ -179,8 +180,8 @@ def plot_gp(mus, sigmas, test_x, test_y=None, train_x=None, train_y=None,
         plt.plot(test_x, test_y, 'o', markersize=4, color='r')
         plt.plot(train_x, train_y, 'o', markersize=8, color='tab:orange')
     #plt.ylim([-3,3])
-
-    plt.axis('off')
+    if not axis_on:
+        plt.axis('off')
     plt.savefig(name, bbox_inches='tight')
     plt.close()
 
