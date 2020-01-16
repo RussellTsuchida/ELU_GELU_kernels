@@ -21,7 +21,7 @@ class NNKernelGelu(NNKernel):
         L (int): The number of hidden layers.
         """
         super().__init__(input_dim, variance_w, mean_w, variance_b, mean_b, L,
-                name)
+                name, standard_first_layer)
 
     def _single_layer_K(self, x1norm, x2norm, x1sum, x2sum, cos_theta, 
             x2_none=False):

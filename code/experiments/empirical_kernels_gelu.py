@@ -30,7 +30,7 @@ b_centre = 0; b_scale = 0;
 #w_centres = [0, -1, -2, 1]
 #w_scales= [np.sqrt(2)]*4
 w_centres = [0]
-w_scales = [1.468]
+w_scales = [1.590581962273607]
 ############################################
 ############################################
 ############################################
@@ -38,7 +38,7 @@ w_scales = [1.468]
 assert len(w_centres) == len(w_scales)
 # Load some random test data
 theta_list = np.linspace(0.0, np.pi, NUM_X_POINTS)
-data = load_or_generate_x_xdash(theta_list, X_DIMENSION)
+data = load_or_generate_x_xdash(theta_list, X_DIMENSION)*0.5
 
 
 for w_centre, w_scale in zip(w_centres, w_scales):
