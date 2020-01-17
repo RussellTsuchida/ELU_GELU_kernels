@@ -32,7 +32,8 @@ class NNKernelGelu(NNKernel):
         if isinstance(cos_theta, int) and (cos_theta == 1):
             return x1norm**2*x2norm**2*(x1norm**2+x2norm**2+2)/\
             (2*np.pi*(x1norm**2+1)*(x2norm**2+1)*np.sqrt(x1norm**2+x2norm**2+1))+\
-            x1norm*x2norm/4*(1+2/np.pi*np.arcsin(x1norm*x2norm/(1+x1norm*x2norm)))
+            x1norm*x2norm/4*(1+2/np.pi*np.arcsin(x1norm*x2norm/\
+            np.sqrt((1+x1norm**2)*(1+x2norm**2))))
         else:
             cos_theta = np.clip(cos_theta, -1, 1)
             sin_theta = np.sqrt(np.clip(1.-cos_theta**2, 0., 1.))
@@ -56,12 +57,14 @@ class NNKernelGelu(NNKernel):
             # Evaluate on {0, pi}
             k[cos_theta == 1] = (x1norm**2*x2norm**2*(x1norm**2+x2norm**2+2)/\
             (2*np.pi*(x1norm**2+1)*(x2norm**2+1)*np.sqrt(x1norm**2+x2norm**2+1))+\
-            x1norm*x2norm/4*(1+2/np.pi*np.arcsin(x1norm*x2norm/(1+x1norm*x2norm))))\
+            x1norm*x2norm/4*(1+2/np.pi*np.arcsin(x1norm*x2norm/\
+            np.sqrt((1+x1norm**2)*(1+x2norm**2)))))\
             [cos_theta == 1]
 
             k[cos_theta == -1] = (x1norm**2*x2norm**2*(x1norm**2+x2norm**2+2)/\
             (2*np.pi*(x1norm**2+1)*(x2norm**2+1)*np.sqrt(x1norm**2+x2norm**2+1))+\
-            x1norm*x2norm/4*(1+2/np.pi*np.arcsin(x1norm*x2norm/(1+x1norm*x2norm)))-\
+            x1norm*x2norm/4*(1+2/np.pi*np.arcsin(x1norm*x2norm/\
+            np.sqrt((1+x1norm**2)*(1+x2norm**2))))-\
             x1norm*x2norm/2)[cos_theta == -1]
 
             return k 
