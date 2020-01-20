@@ -33,7 +33,7 @@ class NNKernelGelu(NNKernel):
         cos_2theta = cos_theta**2 - sin_theta**2
         factor = x1norm**2*x2norm**2/(2*np.pi)
 
-        first_term=(1+x1norm**2+x2norm**2+x1norm**2*x2norm**2*sin_theta**2+\
+        first_term=(x1norm**2+x2norm**2+x1norm**2*x2norm**2*sin_theta**2+\
             0.5*(cos_2theta+3))/\
             ((1+x1norm**2)*(1+x2norm**2)*np.sqrt(1+x1norm**2+x2norm**2+\
             x1norm**2*x2norm**2*sin_theta**2))
@@ -44,7 +44,16 @@ class NNKernelGelu(NNKernel):
 
         c = x1norm*x2norm/4
 
-        return factor*(first_term + second_term) + c*cos_theta
+        k = factor*(first_term + second_term) + c*cos_theta
+        
+        """
+        k[cos_theta == 1] = (x1norm**2*x2norm**2*(x1norm**2+x2norm**2+2)/\
+        (2*np.pi*(x1norm**2+1)*(x2norm**2+1)*np.sqrt(x1norm**2+x2norm**2+1))+\
+        x1norm*x2norm/4*(1+2/np.pi*np.arcsin(x1norm*x2norm/\
+        np.sqrt((1+x1norm**2)*(1+x2norm**2)))))\
+        [cos_theta == 1]
+        """
+        return k
         """
         if isinstance(cos_theta, int) and (cos_theta == 1):
             return x1norm**2*x2norm**2*(x1norm**2+x2norm**2+2)/\
