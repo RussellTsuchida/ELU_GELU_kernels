@@ -28,7 +28,24 @@ class NNKernelGelu(NNKernel):
         """
         Kernel for a single layer
         """
+        cos_theta = np.clip(cos_theta, -1, 1)
+        sin_theta = np.sqrt(np.clip(1.-cos_theta**2, 0., 1.))
+        cos_2theta = cos_theta**2 - sin_theta**2
+        factor = x1norm**2*x2norm**2/(2*np.pi)
 
+        first_term=(1+x1norm**2+x2norm**2+x1norm**2*x2norm**2*sin_theta**2+\
+            0.5*(cos_2theta+3))/\
+            ((1+x1norm**2)*(1+x2norm**2)*np.sqrt(1+x1norm**2+x2norm**2+\
+            x1norm**2*x2norm**2*sin_theta**2))
+
+        atan = np.arctan((cos_theta*x1norm*x2norm)/\
+                np.sqrt(1+x1norm**2+x2norm**2+x1norm**2*x2norm**2*sin_theta**2))
+        second_term = cos_theta*atan/(x1norm*x2norm)
+
+        c = x1norm*x2norm/4
+
+        return factor*(first_term + second_term) + c*cos_theta
+        """
         if isinstance(cos_theta, int) and (cos_theta == 1):
             return x1norm**2*x2norm**2*(x1norm**2+x2norm**2+2)/\
             (2*np.pi*(x1norm**2+1)*(x2norm**2+1)*np.sqrt(x1norm**2+x2norm**2+1))+\
@@ -68,7 +85,7 @@ class NNKernelGelu(NNKernel):
             x1norm*x2norm/2)[cos_theta == -1]
 
             return k 
-
+        """
 
     def _single_layer_M(self, x1norm, x1sum):
         return 0
