@@ -28,12 +28,12 @@ OUT_DIR     = 'code/experiments/outputs/kernels/'
 # Weight and bias standard deviations and means
 b_centre = 0; b_scale = 0;
 w_centres = [0]
-w_scales = [1.4149443398408317]
+w_scales = [1.590581962273607]
 
 # ||x||      w_scale
 #  0.5   1.590581962273607
 #   1    1.4680112605468276
-#   5    1.4149443398408317
+#   5    1.4149443398408315
 ############################################
 ############################################
 ############################################
@@ -41,7 +41,7 @@ w_scales = [1.4149443398408317]
 assert len(w_centres) == len(w_scales)
 # Load some random test data
 theta_list = np.linspace(0.0, np.pi, NUM_X_POINTS)
-data = load_or_generate_x_xdash(theta_list, X_DIMENSION)*5
+data = load_or_generate_x_xdash(theta_list, X_DIMENSION)*0.5
 
 
 for w_centre, w_scale in zip(w_centres, w_scales):

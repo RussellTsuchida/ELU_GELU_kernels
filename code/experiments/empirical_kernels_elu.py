@@ -29,7 +29,7 @@ b_centre = 0; b_scale = 0;
 #w_centres = [0, -1, -2, 1]
 #w_scales= [np.sqrt(2)]*4
 w_centres = [0]
-w_scales = [1.1746549260629595]
+w_scales = [1.4023779627897333]
 
 ##  || x ||       sigma
 ##   0.5       1.1746549260629595
@@ -42,7 +42,7 @@ w_scales = [1.1746549260629595]
 assert len(w_centres) == len(w_scales)
 # Load some random test data
 theta_list = np.linspace(0.01, np.pi, NUM_X_POINTS)
-data = load_or_generate_x_xdash(theta_list, X_DIMENSION)*0.5
+data = load_or_generate_x_xdash(theta_list, X_DIMENSION)*5
 
 for w_centre, w_scale in zip(w_centres, w_scales):
     fname = 'elu_kernel_' + str(w_centre) + '.pdf'
@@ -82,3 +82,5 @@ for w_centre, w_scale in zip(w_centres, w_scales):
             xlabel=r'$\theta^{(0)}$', ylabel=r'$\cos\theta^{(l)}$', fig=fig, 
             marker='x', linewidth=lw, labels=labels, plot_legend=legend,
             markersize=markersize)
+
+

@@ -10,7 +10,7 @@ class NNKernelGelu(NNKernel):
             variance_b = 0, mean_b = 0, L=1, name='nn_gelu', 
             standard_first_layer = False):
         """
-        Equivalent kernel of a neural network with a single hidden layer and
+        Equivalent kernel of a neural network with L hidden layers and
         a GELU activation function.
 
         input_dim (int): Dimensionality of input.
@@ -46,55 +46,7 @@ class NNKernelGelu(NNKernel):
 
         k = factor*(first_term + second_term) + c*cos_theta
         
-        """
-        k[cos_theta == 1] = (x1norm**2*x2norm**2*(x1norm**2+x2norm**2+2)/\
-        (2*np.pi*(x1norm**2+1)*(x2norm**2+1)*np.sqrt(x1norm**2+x2norm**2+1))+\
-        x1norm*x2norm/4*(1+2/np.pi*np.arcsin(x1norm*x2norm/\
-        np.sqrt((1+x1norm**2)*(1+x2norm**2)))))\
-        [cos_theta == 1]
-        """
         return k
-        """
-        if isinstance(cos_theta, int) and (cos_theta == 1):
-            return x1norm**2*x2norm**2*(x1norm**2+x2norm**2+2)/\
-            (2*np.pi*(x1norm**2+1)*(x2norm**2+1)*np.sqrt(x1norm**2+x2norm**2+1))+\
-            x1norm*x2norm/4*(1+2/np.pi*np.arcsin(x1norm*x2norm/\
-            np.sqrt((1+x1norm**2)*(1+x2norm**2))))
-        else:
-            cos_theta = np.clip(cos_theta, -1, 1)
-            sin_theta = np.sqrt(np.clip(1.-cos_theta**2, 0., 1.))
-            factor = x1norm**2*x2norm**2/(2*np.pi)
-     
-            x1_quad = (1+x1norm**2*sin_theta**2)
-            x2_quad = (1+x2norm**2*sin_theta**2)
-
-            first_term = np.divide((x1_quad*x2_quad - cos_theta**4),
-                (sin_theta**2*(1+x1norm**2)*(1+x2norm**2)*\
-                np.sqrt(1+x1norm**2+x2norm**2+x1norm**2*x2norm**2*sin_theta**2)),
-                out = np.zeros_like(cos_theta, dtype=float),
-                where = sin_theta != 0)
-
-            atan = np.arctan(cos_theta*x1norm*x2norm/\
-                (np.sqrt(1+x1norm**2+x2norm**2+x1norm**2*x2norm**2*sin_theta**2)))
-            #atan[np.isnan(atan)] = np.arctan(np.inf)
-            second_term = cos_theta*atan/(x1norm*x2norm)
-            
-            k = factor*(first_term+second_term)+x1norm*x2norm*cos_theta/4.
-            # Evaluate on {0, pi}
-            k[cos_theta == 1] = (x1norm**2*x2norm**2*(x1norm**2+x2norm**2+2)/\
-            (2*np.pi*(x1norm**2+1)*(x2norm**2+1)*np.sqrt(x1norm**2+x2norm**2+1))+\
-            x1norm*x2norm/4*(1+2/np.pi*np.arcsin(x1norm*x2norm/\
-            np.sqrt((1+x1norm**2)*(1+x2norm**2)))))\
-            [cos_theta == 1]
-
-            k[cos_theta == -1] = (x1norm**2*x2norm**2*(x1norm**2+x2norm**2+2)/\
-            (2*np.pi*(x1norm**2+1)*(x2norm**2+1)*np.sqrt(x1norm**2+x2norm**2+1))+\
-            x1norm*x2norm/4*(1+2/np.pi*np.arcsin(x1norm*x2norm/\
-            np.sqrt((1+x1norm**2)*(1+x2norm**2))))-\
-            x1norm*x2norm/2)[cos_theta == -1]
-
-            return k 
-        """
 
     def _single_layer_M(self, x1norm, x1sum):
         return 0

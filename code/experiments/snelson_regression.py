@@ -17,7 +17,7 @@ from ..mvn_mixture.diag_mvn_mixture import DiagMVNMixture
 ############################################
 NOISE_VAR   = 0.1 # If this setting is changed, 
 OUT_DIR     = 'code/experiments/outputs/snelson/'
-KERNEL      = 'gelu' # elu or gelu. elu is currently bugged, working on fixing.
+KERNEL      = 'elu' # elu or gelu. elu is currently bugged, working on fixing.
 ############################################
 ############################################
 X, Y, X_test, Y_test = load_or_generate_snelson()
@@ -54,9 +54,9 @@ likelihood = lambda w_centre, w_var, L: np.exp(\
 # (If you wanted to do hyperparameter search you would loop over values here
 # and evaluate the likelihood for each w_var)
 
-w_var = 1.46**2
+w_var = 0.5**2
 w_centre = 0 # VALUES NOT EQUAL TO ZERO ARE CURRENTLY NOT IMPLEMENTED
-L = 2
+L = 1
 
 m = model(w_centre, w_var, L)
 mean, var = m.predict(X_test)

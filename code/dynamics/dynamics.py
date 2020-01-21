@@ -60,7 +60,6 @@ def lambda_1_gelu(sigma, norm, theta):
     Evaluate the lambda 1 at the value of s and norm, assuming sigma is at
     sigma star.
     """
-    # TODO: There is an issue with Williams' - arcsin can be undefined
     term1 = sigma**2/4*(1+2/np.pi*np.arcsin(\
             (sigma*norm)**2*np.cos(theta)/(1+sigma**2*norm**2)))
     term2 = sigma**4*norm**2*np.cos(theta)/\
@@ -80,7 +79,7 @@ def lambda_1_elu(sigma, norm, theta):
 
     rho = np.cos(theta)
     rv = multivariate_normal(mean = [0,0], cov=[[1, -rho], [-rho, 1]])
-    term2 = 2*np.exp((sigma*norm)**2/2)*rv.cdf([-sigma*norm, -sigma*norm*rho])
+    term2 = 2*np.exp((sigma*norm)**2/2)*rv.cdf([-sigma*norm, sigma*norm*rho])
 
     rv = multivariate_normal(mean = [0,0], cov=[[1, rho], [rho, 1]])
     term3 = np.exp(0.5*(2*(sigma*norm)**2+2*(sigma*norm)**2*rho))*rv.cdf(\
@@ -111,7 +110,7 @@ for mode in ['ELU', 'GELU', 'ReLU']:
     sigma_star_fig = sigma_star_plot(g, mode, sigma_star_fig)
 
     # Plot lambda_1
-    norm_list = [0.1, 0.5, 1, 2, 5, 10, 20]
+    norm_list = [0.1, 0.5, 1, 2, 5]
     theta_list = np.linspace(0.001, np.pi-0.001, 500)
     plt.figure(figsize=(7,7))
     for norm in norm_list:
