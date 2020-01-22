@@ -55,7 +55,7 @@ def norm_preserving_s(g, norm):
     sigma = sigma_star(g, norm)
     return sigma*norm
 
-def lambda_1_gelu(sigma, norm, theta):
+def lambda_3_gelu(sigma, norm, theta):
     """
     Evaluate the lambda 1 at the value of s and norm, assuming sigma is at
     sigma star.
@@ -66,11 +66,12 @@ def lambda_1_gelu(sigma, norm, theta):
             (np.pi*(norm**2*sigma**2+1)*\
             np.sqrt(sigma**4*norm**4*np.sin(theta)**2+2*norm**2*sigma**2+1))
     term3 = sigma**4*norm**2*np.cos(theta)\
-            /(2*np.pi)*(1+2*sigma**2*norm**2+norm**4*np.sin(theta)**2)**(-3/2)
+            /(2*np.pi)*\
+            (1+2*sigma**2*norm**2+sigma**4*norm**4*np.sin(theta)**2)**(-3/2)
 
     return term1 + term2 + term3
 
-def lambda_1_elu(sigma, norm, theta):
+def lambda_3_elu(sigma, norm, theta):
     """
     Evaluate the lambda 1 at the value of s and norm, assuming sigma is at
     sigma star.
@@ -90,7 +91,7 @@ def lambda_1_elu(sigma, norm, theta):
 
 # This code does two things:
 # (1) Draw sigma star against ||x||
-# (2) Plot the lambda_1 against theta for each activation function
+# (2) Plot the lambda_3 against theta for each activation function
 sigma_star_fig = None
 for mode in ['ELU', 'GELU', 'ReLU']:
     if mode == 'ELU':
@@ -109,7 +110,7 @@ for mode in ['ELU', 'GELU', 'ReLU']:
     # Plot sigma star
     sigma_star_fig = sigma_star_plot(g, mode, sigma_star_fig)
 
-    # Plot lambda_1
+    # Plot lambda_3
     norm_list = [0.1, 0.5, 1, 2, 5]
     theta_list = np.linspace(0.001, np.pi-0.001, 500)
     plt.figure(figsize=(7,7))
@@ -121,19 +122,19 @@ for mode in ['ELU', 'GELU', 'ReLU']:
         print(norm)
         print(sigma)
 
-        # Now caluclate lambda_1 over the interval (0, pi)
+        # Now caluclate lambda_3 over the interval (0, pi)
         lambda_list = np.zeros_like(theta_list)
         for i, theta in enumerate(theta_list):
             if mode == 'ELU':
-                lambda_1 = lambda_1_elu(sigma, norm, theta)
+                lambda_3 = lambda_3_elu(sigma, norm, theta)
             elif mode == 'GELU':
-                lambda_1 = lambda_1_gelu(sigma, norm, theta)
+                lambda_3 = lambda_3_gelu(sigma, norm, theta)
             elif mode == 'ReLU':
-                lambda_1 = (np.pi - theta)/np.pi
-            lambda_list[i] = lambda_1
+                lambda_3 = (np.pi - theta)/np.pi
+            lambda_list[i] = lambda_3
         plt.plot(theta_list, lambda_list, 
                 label=r'$\Vert \mathbf{x} \Vert = ' + str(norm) + '$')
-    plt.ylabel(r'$\lambda_1$', fontsize=40)
+    plt.ylabel(r'$\lambda_3$', fontsize=40)
     plt.xlabel(r'$\theta$', fontsize=40)
     ax = plt.gca()
     ax.tick_params(axis = 'both', which = 'major', labelsize = 30)
