@@ -39,7 +39,7 @@ class NNKernelElu(NNKernel):
         Args:
             x1norm (nparray): 
         """
-        k_relu = self.kernel_relu._single_layer_K(x1norm, x2norm, x1sum, x2sum, 
+        E1 = self.kernel_relu._single_layer_K(x1norm, x2norm, x1sum, x2sum, 
                 cos_theta, x2_none)
 
         e4_1 = self._E4(x1norm, x2norm, cos_theta, x2_none)
@@ -59,10 +59,8 @@ class NNKernelElu(NNKernel):
         else:
             E3 = self._E2(x2norm, x1norm, cos_theta, x2_none)
 
-        E1 = k_relu
-        
         k = E1 + E2 + E3 + E4
-        return k
+        return  k
 
     def _E4(self, a, b, cos_theta, x2_none):
         """
@@ -92,9 +90,14 @@ class NNKernelElu(NNKernel):
 
         cdf, pdf = self._vectorised_bvn_cdf_pdf(-mu1, -mu2, cos_theta, 
                 x2_none = x2_none, mus_are_vectors=False)
-        log_cdf = np.log(cdf)
+        cdf_copy = np.copy(cdf)
+        cdf_copy[cdf_copy <= 0] = 1
+        log_cdf = np.log(cdf_copy)
 
-        return np.exp(log_factor+log_cdf)
+        e4 = np.exp(log_factor+log_cdf)
+        e4[cdf <= 0] = 0
+
+        return e4
 
         #return factor*cdf
 
@@ -119,21 +122,22 @@ class NNKernelElu(NNKernel):
         cdf, pdf = self._vectorised_bvn_cdf_pdf(xnorm2*cos_theta, -xnorm2,
                 -cos_theta, x2_none = x2_none, mus_are_vectors = False)
 
-        #return (-self._M(0*xnorm1, 0*xnorm1, cos_theta) + \
-        #        (self._M(xnorm2*cos_theta, -xnorm2, cos_theta) + \
-        #        xnorm2*cos_theta*cdf)*np.exp(xnorm2**2/2))*xnorm1
         # Operate in log space to avoid numerical overflow
-
         log_arg = self._M(-xnorm2*cos_theta, xnorm2, cos_theta) + \
                 xnorm2*cos_theta*cdf
-        log_factor = np.log(log_arg)
+
+        log_arg_copy = np.copy(log_arg)
+        log_arg_copy[log_arg_copy <=0] = 1
+        log_factor = np.log(log_arg_copy)
         log_exp = xnorm2**2/2
 
         second_term = np.exp(log_exp + log_factor)
         second_term[log_arg <= 0] = 0
 
-        return (-self._M(0*xnorm1, 0*xnorm1, cos_theta) + \
+        e2 =  (-self._M(0*xnorm1, 0*xnorm1, cos_theta) + \
                 second_term)*xnorm1
+        e2[cos_theta == 1] = 0
+        return e2
 
     def _M(self, h, k, cos_theta):
         sin_theta = np.sqrt( np.clip(1-cos_theta**2, 0, 1) )
@@ -141,16 +145,18 @@ class NNKernelElu(NNKernel):
         if (type(cos_theta) is int):
             if sin_theta == 0:
                 out = norm.pdf(h)*(1-(np.sign(k+h*cos_theta)+1)/2.) - \
-                        norm.pdf(k)*cos_theta*(1-(np.sign(h+k*cos_theta)+1)/2.)
+            cos_theta*norm.pdf(k)*(1-(np.sign(h+k*cos_theta)+1)/2.)
                 return out
-
-        out =   norm.pdf(h) * (1-norm.cdf((k+h*cos_theta)/sin_theta)) - \
-      cos_theta*norm.pdf(k) * (1-norm.cdf((h+k*cos_theta)/sin_theta))
+        
+        sin_theta_copy = np.copy(sin_theta)
+        sin_theta_copy[sin_theta_copy == 0] = 1
+        out =   norm.pdf(h) * (1-norm.cdf((k+h*cos_theta)/sin_theta_copy)) - \
+      cos_theta*norm.pdf(k) * (1-norm.cdf((h+k*cos_theta)/sin_theta_copy))
 
         if not (type(sin_theta) is int):
             out[sin_theta == 0] = \
                     (norm.pdf(h)*(1-(np.sign(k+h*cos_theta)+1)/2.)-\
-                    cos_theta*norm.pdf(k)*(1-(np.sign(h+k*cos_theta)+1.)/2.))\
+           cos_theta*norm.pdf(k)*(1-(np.sign(h+k*cos_theta)+1.)/2.))\
                     [sin_theta==0]
 
         return out
