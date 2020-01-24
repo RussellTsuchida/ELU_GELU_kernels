@@ -92,6 +92,7 @@ class NNKernelElu(NNKernel):
                 x2_none = x2_none, mus_are_vectors=False)
         cdf_copy = np.copy(cdf)
         cdf_copy[cdf_copy <= 0] = 1
+        log_factor[cdf_copy <= 0] = 1
         log_cdf = np.log(cdf_copy)
 
         e4 = np.exp(log_factor+log_cdf)
@@ -130,6 +131,7 @@ class NNKernelElu(NNKernel):
         log_arg_copy[log_arg_copy <=0] = 1
         log_factor = np.log(log_arg_copy)
         log_exp = xnorm2**2/2
+        log_exp[log_arg <= 0] = 1
 
         second_term = np.exp(log_exp + log_factor)
         second_term[log_arg <= 0] = 0
