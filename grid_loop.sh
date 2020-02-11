@@ -1,5 +1,8 @@
 #!/bin/bash
 
+## This script is designed to use on a system that uses SLURM to schedule jobs.
+## If your system doesn't use SLURM, replace line 19 and 23 with appropriate 
+## commands.
 ## INPUTS TO THIS SCRIPT
 ## (1) String representing dataset name
 ## (2) String representing kernel name
@@ -14,7 +17,7 @@ for var_idx in "${!vars[@]}"
 do
     for l_idx in "${!depths[@]}"
     do
-        while [ $(squeue -u uqstsuch -n "${2} ${1}" | wc -l) -gt $num ]
+        while [ $(squeue -n "${2} ${1}" | wc -l) -gt $num ]
         do
             sleep 1
         done

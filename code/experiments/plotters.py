@@ -43,7 +43,8 @@ def plot_2d_samples(x, y, z, name='samples_2d.pdf'):
 
 def plot_samples(x, y, name='samples.pdf', xlabel=r'$x$', ylabel=r'$y$',
         labels=[], linewidth=0, markersize=4, fig=None, marker='o',
-        plot_legend = True, default_colours = False, y_tick_labels=True):
+        plot_legend = True, default_colours = False, y_tick_labels=True,
+        legend_fontsize=25, fill_between=None):
     """
     Plot a number of y's against a common x.
     """
@@ -63,8 +64,14 @@ def plot_samples(x, y, name='samples.pdf', xlabel=r'$x$', ylabel=r'$y$',
             plt.plot(x, y_s,
                 marker=marker, markersize=markersize, linewidth=linewidth)
         else:
-            plt.plot(x, y_s, c=viridis(norm(np.log2(s+1))),
-                marker=marker, markersize=markersize, linewidth=linewidth)
+            if fill_between is None:
+                plt.plot(x, y_s, c=viridis(norm(np.log2(s+1))),
+                    marker=marker, markersize=markersize, linewidth=linewidth)
+            else:
+                plt.fill_between(x, y_s, y_s+fill_between[s,:], alpha=0.1,lw=0,
+                        color=viridis(norm(np.log2(s+1))))
+                plt.fill_between(x, y_s, y_s-fill_between[s,:], alpha=0.1,lw=0,
+                        color=viridis(norm(np.log2(s+1))))
 
     # Format the plot
     plt.xlabel(xlabel, fontsize=40)
@@ -75,7 +82,7 @@ def plot_samples(x, y, name='samples.pdf', xlabel=r'$x$', ylabel=r'$y$',
     if (plot_legend) and not default_colours:
         handles = [mpatches.Patch(color=viridis(norm(np.log2(idx+1))), 
                         label=l) for idx, l in enumerate(labels)]
-        plt.legend(handles=handles, fontsize=25)
+        plt.legend(handles=handles, fontsize=legend_fontsize)
 
     # Disable y ticks if required
     if not y_tick_labels:
