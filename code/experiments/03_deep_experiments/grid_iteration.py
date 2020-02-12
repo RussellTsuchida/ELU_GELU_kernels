@@ -2,16 +2,17 @@ import sys
 import numpy as np
 
 # Internal imports
-from ..kernels.nn_kernel_relu import NNKernelRelu
-from ..kernels.nn_kernel_gelu import NNKernelGelu
-from ..kernels.nn_kernel_elu import NNKernelElu
-from ..kernels.nn_kernel_erf import NNKernelErf
-from ..kernels.nn_kernel_lrelu import NNKernelLeakyRelu
+from ...kernels.nn_kernel_relu import NNKernelRelu
+from ...kernels.nn_kernel_gelu import NNKernelGelu
+from ...kernels.nn_kernel_elu import NNKernelElu
+from ...kernels.nn_kernel_erf import NNKernelErf
+from ...kernels.nn_kernel_lrelu import NNKernelLRelu
 
-from.experiment_array import ExperimentArray
-from .data import datasets
+from .experiment_array import ExperimentArray
+from ..data import datasets
 
-DIR         = 'code/experiments/data/'
+DIR         = 'code/experiments/01_data/'
+OUTPUT_DIR  = 'code/experiments/outputs/deep_experiments/'
 NOISE_VAR   = 0.1
 FORCE_NEW   = False
 
@@ -24,8 +25,8 @@ var_idx     = int(sys.argv[4])
 L           = int(sys.argv[5])
 L_idx       = int(sys.argv[6])
 
-rmse_data = ExperimentArray((32, 50), kern_str+data+'/rmse2/')
-nll_data = ExperimentArray((32, 50), kern_str+data+'/nll2/')
+rmse_data = ExperimentArray((32, 50), OUTPUT_DIR + kern_str+data+'/rmseX/')
+nll_data = ExperimentArray((32, 50), OUTPUT_DIR + kern_str+data+'/nllX/')
 # Skip points that have already been measured. 
 # This means it is the experimenter's responsibility to clear disk if
 # experiment parameters change.
@@ -59,7 +60,7 @@ X_train, Y_train, X_test, Y_test = dataset.load_or_generate_data()
 if kern_str == 'ReLU':
     kern = NNKernelRelu(X_train.shape[1], var, 0, var, 0, L)
 elif kern_str == 'LReLU':
-    kern = NNKernelLeakyRelu(X_train.shape[1], var, 0, var, 0, L)
+    kern = NNKernelLRelu(X_train.shape[1], var, 0, var, 0, L)
 elif kern_str == 'ERF':
     kern = NNKernelErf(X_train.shape[1], var, 0, var, 0, L)
 elif kern_str == 'GELU':

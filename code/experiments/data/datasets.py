@@ -111,7 +111,8 @@ class Boston(Dataset):
         self.train_test_split = train_test_split
 
     def _generate_data(self):
-        data = np.loadtxt(open(self.out_dir + '/boston.csv'))
+        data = np.loadtxt(open(self.out_dir+'/01_boston_house/housing_data.csv'),
+                skiprows=0)
         np.random.shuffle(data) # in-place
         X = data[:,:13]
         Y = data[:,13].reshape((-1, 1))
@@ -133,7 +134,8 @@ class Concrete(Dataset):
         self.train_test_split = train_test_split
 
     def _generate_data(self):
-        data = np.loadtxt(open(self.out_dir + '/concrete.csv'))
+        data = np.loadtxt(open(self.out_dir + '/02_concrete/Concrete_Data.csv'),
+                skiprows=1, delimiter=',')
         np.random.shuffle(data) # in-place
         X = data[:,:8]
         Y = data[:,8].reshape((-1, 1))
@@ -155,7 +157,8 @@ class Energy(Dataset):
         self.train_test_split = train_test_split
 
     def _generate_data(self):
-        data = np.loadtxt(open(self.out_dir + '/energy.csv'), delimiter=',')
+        data = np.loadtxt(open(self.out_dir + '/03_energy/ENB2012_data.csv'), 
+                delimiter=',',skiprows=1)
         np.random.shuffle(data) # in-place
         X = data[:,:8]
         Y = data[:,8].reshape((-1, 1))
@@ -176,7 +179,7 @@ class Kin8nm(Dataset):
         self.train_test_split = train_test_split
 
     def _generate_data(self):
-        data = np.loadtxt(open(self.out_dir + '/kin8nm.csv'))
+        data = np.loadtxt(open(self.out_dir + '/04_kin8nm/Dataset.csv'))
         np.random.shuffle(data) # in-place
         X = data[:,:8]
         Y = data[:,8].reshape((-1, 1))
@@ -198,7 +201,7 @@ class Naval(Dataset):
         self.train_test_split = train_test_split
 
     def _generate_data(self):
-        data = np.loadtxt(open(self.out_dir + '/naval.csv'))
+        data = np.loadtxt(open(self.out_dir + '/05_naval/data.csv'))
         np.random.shuffle(data) # in-place
         X = data[:,:16]
         Y = data[:,17].reshape((-1, 1))
@@ -220,7 +223,8 @@ class Power(Dataset):
         self.train_test_split = train_test_split
 
     def _generate_data(self):
-        data = np.loadtxt(open(self.out_dir + '/power.csv'), delimiter=',')
+        data = np.loadtxt(open(self.out_dir + '/06_power_plant/Folds5x2_pp.csv'), 
+                delimiter=',', skiprows=1)
         np.random.shuffle(data) # in-place
         X = data[:,:4]
         Y = data[:,4].reshape((-1, 1))
@@ -242,7 +246,8 @@ class Protein(Dataset):
         self.train_test_split = train_test_split
 
     def _generate_data(self):
-        data = np.loadtxt(open(self.out_dir + '/protein.csv'), delimiter=',')
+        data = np.loadtxt(open(self.out_dir + '/07_protein/CASP.csv'), 
+                delimiter=',', skiprows=1)
         np.random.shuffle(data) # in-place
         X = data[:,1:10]
         Y = data[:,0].reshape((-1, 1))
@@ -264,7 +269,8 @@ class Wine(Dataset):
         self.train_test_split = train_test_split
 
     def _generate_data(self):
-        data = np.loadtxt(open(self.out_dir + '/wine.csv'), delimiter=';')
+        data = np.loadtxt(open(self.out_dir + '/08_wine/winequality-red.csv'), 
+                delimiter=';',skiprows=1)
         np.random.shuffle(data) # in-place
         X = data[:,:11]
         Y = data[:,11].reshape((-1, 1))
@@ -286,7 +292,8 @@ class Yacht(Dataset):
         self.train_test_split = train_test_split
 
     def _generate_data(self):
-        data = np.loadtxt(open(self.out_dir + '/yacht.csv'))
+        data = np.loadtxt(open(self.out_dir + \
+                '/09_yacht/yacht_hydrodynamics.csv'))
         np.random.shuffle(data) # in-place
         X = data[:,:6]
         Y = data[:,6].reshape((-1, 1))

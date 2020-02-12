@@ -1,7 +1,9 @@
 import numpy as np
 
 from .experiment_array import ExperimentArray
-from .plotters import plot_samples
+from ..plotters import plot_samples
+
+OUTPUT_DIR  = 'code/experiments/outputs/deep_experiments/'
 
 def plot_and_return_rmse(data, kernel):
     num_trials = 6
@@ -15,9 +17,9 @@ def plot_and_return_rmse(data, kernel):
     rmse_old = np.zeros((32,50))
     n = -1
     for trial in range(2, num_trials+1):
-        rmse_new = ExperimentArray((32, 50), kernel + data + '/rmse' + \
+        rmse_new = ExperimentArray((32, 50), OUTPUT_DIR+kernel+data+'/rmse'+\
                 str(trial) + '/').load_array()
-        nll_new = ExperimentArray((32, 50), kernel + data + '/nll' + \
+        nll_new = ExperimentArray((32, 50), OUTPUT_DIR+kernel+data+'/nll'+\
                 str(trial) + '/').load_array()
         if np.all(rmse_new == rmse_old):
             print(trial)
