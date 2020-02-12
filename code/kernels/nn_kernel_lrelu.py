@@ -9,7 +9,7 @@ from .nn_kernel import NNKernel
 from .nn_kernel_linear import NNKernelLinear
 from .nn_kernel_abs import NNKernelAbs
 
-class NNKernelLeakyRelu(NNKernel):
+class NNKernelLRelu(NNKernel):
     __metaclass__ = abc.ABCMeta
     def __init__(self, input_dim, variance_w = 1., mean_w = 0, 
             variance_b = 0, mean_b = 0, L=1, name='nn_lrelu',

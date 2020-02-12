@@ -23,7 +23,7 @@ class NNKernel(GPy.kern.Kern):
             variance_w (float or list(float)): Variance of the weights. If a
                 single float, the weights in each layer will share the same
                 variance. Otherwise if a list, the length of the list must be
-                equal to L. If standard_first_layer==True, the first element
+                equal to L+1. If standard_first_layer==True, the first element
                 of the list will be ignored.
             mean_w (float or list(float)): Mean of the weights. See variance_w
                 for list behaviour.

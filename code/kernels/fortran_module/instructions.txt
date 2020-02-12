@@ -1,0 +1,51 @@
+The nn_kernel.py file relies on a module that computes the bivariate normal
+CDF. This calculation is used in the ELU kernel and in the ReLU kernel when
+the means of the weights are non-zero. 
+
+The module is compiled Fortran code that is packaged using f2py. The module
+is OS/Python version specific, so it may not work for your setup. If this
+is the case, follow the instructions below to generate your own module. It
+should take less than 5 minutes.
+
+(1) Install f2py if you don't already have it.
+(2) Run the command
+        python3 -m numpy.f2py -c TVTST3.pyf TVTST.f
+    from inside this directory. This should create a .so file.
+(3) Check that you can import the .so file. If you like, you can test the
+    performance gains through a simple script. For example,
+
+###############################################################################
+import numpy as np 
+from .TVTST3 import vec_bvnd 
+from scipy.stats import multivariate_normal as mvn 
+import time 
+ 
+def run_test(num_iters): 
+    means = np.random.normal(0, 1, [num_iters, 2]) 
+    covs = np.random.uniform(0.01, 0.99, [num_iters, 1]) 
+ 
+    # Computation time for Scipy loop 
+    t0 = time.time() 
+    cdfs_s = np.empty((num_iters,)) 
+    for i in range(num_iters): 
+        cov = np.array([[1, covs[i,0]],[covs[i,0],1]]) 
+        cdf = mvn.cdf(means[i,:], mean=[0,0], cov=cov) 
+        cdfs_s[i] = cdf 
+    time_sp = time.time() - t0 
+    print(’Took ’ + str(time_sp) + ’ seconds using Scipy.’) 
+ 
+    # Computation time for FORTRAN loop 
+    t0 = time.time() 
+    cdfs_f = np.empty((num_iters,)) 
+    vec_bvnd(-means[:,0], -means[:,1], covs[:,0], cdfs_f, num_iters) 
+    time_f = time.time() - t0 
+    print(’Took ’ + str(time_f) + ’ seconds using FORTRAN.’) 
+ 
+    # Check the results agree 
+    print(str(np.average((cdfs_f - cdfs_s)/cdfs_s*100)) + ’% error.’) 
+    factor = time_sp/time_f 
+    print(’Sped-up by a factor of ’ + str(factor)) 
+    return factor 
+ 
+# Single test to check accuracy 
+run_test(10000)

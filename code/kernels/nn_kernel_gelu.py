@@ -49,4 +49,5 @@ class NNKernelGelu(NNKernel):
         return k
 
     def _single_layer_M(self, x1norm, x1sum):
+        # Not implemented
         return 0

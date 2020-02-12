@@ -33,7 +33,6 @@ if rmse_data[L_idx, var_idx] != 0:
     print("Already measured, exiting...")
     sys.exit()
 ###############################################################################
-
 ###################################### Set up data ############################
 if data == 'Boston':
     dataset = datasets.Boston(DIR)
