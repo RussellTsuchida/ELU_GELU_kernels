@@ -34,15 +34,17 @@ experiments in parallel. It is possible to change this set-up based on what
 you need.
 
 Figure 6 may be reproduced by typing
-`python3 -m code.experiments.02_shallow_experiments.main_exp_bench`
+`python3 -m code.experiments.02_shallow_experiments.benchmark_experiment`
 NOTE: This runs all the experiment IN SERIES. If desired, you may want to 
-run these in parallel.
+run these in parallel. Once the code has finished running, plot the results
+using 
+`python3 -m code.experiments.02-shallow_experiments.benchmark_plotter`
+after changing line 20.
 
 Figure 7 may be reproduced through a multi-step process. 
 1. Edit lines 28 and 29 of
    `code/experiments/03_deep_experiments/grid_iteration.py` 
-   <pre><code>
-   rmse_data = ExperimentArray((32, 50), OUTPUT_DIR + kern_str+data+'/rmseX/')
+   <pre><code>rmse_data = ExperimentArray((32, 50), OUTPUT_DIR + kern_str+data+'/rmseX/')
    nll_data = ExperimentArray((32, 50), OUTPUT_DIR + kern_str+data+'/nllX/')
    </code></pre>
    replacing X with 1. 
