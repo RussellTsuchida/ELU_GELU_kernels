@@ -6,7 +6,7 @@ from scipy.stats import multivariate_normal as mvn
 from scipy.stats import norm
 from scipy.special import erf
 
-from .TVTST3 import vec_bvnd
+from .fortran_module.TVTST3 import vec_bvnd
 
 class NNKernel(GPy.kern.Kern):
     __metaclass__ = abc.ABCMeta
@@ -52,7 +52,7 @@ class NNKernel(GPy.kern.Kern):
         if np.isscalar(scalar):
             scalar = [scalar]*self.L
         else:
-            assert len(list(scalar)) == self.L
+            assert len(list(scalar)) == self.L+1
         return scalar
  
     def _set_first_layer_standard_params(self):
