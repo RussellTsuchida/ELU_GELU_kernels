@@ -38,7 +38,7 @@ Figure 6 may be reproduced by typing
 NOTE: This runs all the experiment IN SERIES. If desired, you may want to 
 run these in parallel. Once the code has finished running, plot the results
 using 
-`python3 -m code.experiments.02-shallow_experiments.benchmark_plotter`
+`python3 -m code.experiments.02_shallow_experiments.benchmark_plotter`
 after changing line 20.
 
 Figure 7 may be reproduced through a multi-step process. 
