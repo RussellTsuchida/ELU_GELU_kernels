@@ -11,7 +11,7 @@ We recommend you use a virtual environment. Inside your environment, type
 
 You might need to compile a piece of Fortran code into a Python module. If you
 receive errors when trying to run the commands below, follow the directions
-in `code/experiments/fortran_module/instructions.txt`
+in `code/kernels/fortran_module/instructions.txt`
 
 ## Reproducing the results in the paper
 Each of these commands should be run from the top directory, which is called 
