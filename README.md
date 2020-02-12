@@ -48,13 +48,17 @@ Figure 7 may be reproduced through a multi-step process.
    replacing X with 1. 
 2. Run 
    `./grid_loop.sh Boston GELU &`
-3. Run the first argument of the command above with every dataset and kernel
+   By default this is set up to run on a system using SLURM to schedule jobs.
+   If you don't use SLURM, edit the file as needed.
+3. Run the command above with every dataset and kernel
    combination (Boston, Concrete, Energy, Wine, Yacht) and (GELU, ReLU, LReLU,
    Yacht, Wine).
 4. You have now run each combination through one data shuffle. The data is 
    stored in `code/experiments/outputs/deep_experiments`. To shuffle and
    run again, delete all the .npy files in `code/experiments/01_data/` and 
    go back to step 1, replacing X with 2, 3, ... etc.
-5. Once you have enough data, run 
+5. Once you have enough data, edit lines 9 and 19 of 
+   `code/experiments/03_deep_experiments/plot_performance` to reflect how much
+   data you gathered, then run 
    `python3 -m code.experiments.03_deep_experiments.plot_performance` to
    aggregate all the data.
