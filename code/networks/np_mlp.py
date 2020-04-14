@@ -53,14 +53,18 @@ class Mlp(object):
                     w_init = lambda x: np.random.normal(0, 1, x)
                     b_init = lambda x: np.zeros((x))
                 else:
-                    w_init = create_initialiser(self.weight_init._F, 
-                            self.weight_init._expected_over_D_of_F,
-                            apply_scale=False, 
-                            use_normal_ABCD = self.weight_init.use_normal_ABCD)
-                    b_init = create_initialiser(self.bias_init._F, 
-                            self.bias_init._expected_over_D_of_F,
-                            apply_scale=False, 
-                            use_normal_ABCD = self.bias_init.use_normal_ABCD)
+                    w_init = self.weight_init
+                    b_init = self.bias_init
+                    w_init.apply_scale = False
+                    b_init.apply_scale = False
+                    #w_init = create_initialiser(self.weight_init._F, 
+                    #        self.weight_init._expected_over_D_of_F,
+                    #        apply_scale=False, 
+                    #        use_normal_ABCD = self.weight_init.use_normal_ABCD)
+                    #b_init = create_initialiser(self.bias_init._F, 
+                    #        self.bias_init._expected_over_D_of_F,
+                    #        apply_scale=False, 
+                    #        use_normal_ABCD = self.bias_init.use_normal_ABCD)
             else:
                 w_init = self.weight_init
                 b_init = self.bias_init
@@ -69,8 +73,8 @@ class Mlp(object):
                 w_init = lambda x: np.random.normal(0, scale_w, x)
                 b_init = lambda x: np.zeros((x))
 
-            input_shape = (self.layer_widths[l-1],)
-            activation = self.layer_activations[l-1]
+            #input_shape = (self.layer_widths[l-1],)
+            #activation = self.layer_activations[l-1]
 
             self.layer_weights[l-1] = \
             w_init((self.layer_widths[l],self.layer_widths[l-1]))

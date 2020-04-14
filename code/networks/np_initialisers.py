@@ -1,5 +1,7 @@
 import numpy as np
 import abc
+from scipy.stats import gennorm
+from scipy.special import gamma
 
 class RceInitialiser(object):
     __metaclass__ = abc.ABCMeta
@@ -81,4 +83,33 @@ def create_initialiser(F, EF, apply_scale=True, use_normal_ABCD=True):
             self._expected_over_D_of_F = EF
 
     return LambdaRceInitialiser()
+
+class GeneralisedNormal(object):
+    """
+    The generalised normal has a shape parameter beta that controls the tails of
+    the pdf. When beta=2 we recover the Gaussian, beta = 1 is Laplace, beta->inf
+    is uniform.
+
+    https://docs.scipy.org/doc/scipy-0.16.0/reference/generated/scipy.stats.gennorm.html
+
+    """
+    def __init__(self, apply_scale=True, beta =2, std=1):
+        self.apply_scale    = apply_scale
+        self.beta           = beta
+        self.std            = std
+
+    def __call__(self, shape):
+        if self.apply_scale:
+            sqrt_n = np.sqrt(shape[1])
+        else:
+            sqrt_n = 1
+
+        D = gennorm.rvs(beta=self.beta, size=shape)
+        # This is the variance of d
+        var = gamma(3./self.beta)/gamma(1./self.beta)
+        # Make D have unit variance
+        D = D/np.sqrt(var)
+        
+        # Return correctly scaled version of D
+        return D/sqrt_n*std
 
