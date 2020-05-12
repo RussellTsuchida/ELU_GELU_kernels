@@ -40,8 +40,8 @@ if is_save_results:
 
 for activation_fn in ['gelu','relu','erf','Lrelu']:
     print_w_time(str('\n\n// - working on '+activation_fn+ ' - //\n\n'))
-    for data_set in ['~boston','~concrete','~energy','~kin8','~naval','~power', 
-            '~protein','~wine','~yacht']:
+    for data_set in ['~boston']:#,'~concrete','~energy','~kin8','~naval','~power', 
+            #'~protein','~wine','~yacht']:
         print_w_time(str('\n\n// - working on '+data_set+ ' - //\n\n'))
 
         if data_set=='~protein':
@@ -84,8 +84,8 @@ for activation_fn in ['gelu','relu','erf','Lrelu']:
                 else:
                     # higher data noise
                     data_noise_vals=[1.0,0.1,0.01]
-                #b_0_var_vals=[10,3.5,3.0,2.5,2.0,1.5,1.0,0.5,0.1]
-                b_0_var_vals = [1.0, 2.0]
+                b_0_var_vals=[10,3.5,3.0,2.5,2.0,1.5,1.0,0.5,0.1]
+                #b_0_var_vals = [1.0, 2.0]
                 w_0_var_vals=b_0_var_vals
                 w_1_var_vals=b_0_var_vals
 

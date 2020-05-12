@@ -2,6 +2,7 @@ import numpy as np
 
 from .experiment_array import ExperimentArray
 from ..plotters import plot_samples
+from ..plotters import plot_legend_only
 
 OUTPUT_DIR  = 'code/experiments/outputs/deep_experiments/'
 
@@ -59,26 +60,28 @@ def plot_and_return_rmse(data, kernel):
     nll_fig = None
 
     rmse_fig = plot_samples(var_list, rmse_mean, 
-            kernel+data+'/rmse_plot.pdf', fig = rmse_fig,
+            kernel+data+'/rmse_plot.pdf', fig = rmse_fig, plot_legend=False,
             markersize=0, labels=labels, linewidth=1, legend_fontsize=7,
             xlabel=r'$\sigma_w^2$', ylabel=r'RMSE', fill_between=np.sqrt(rmse_var))
     rmse_fig = plot_samples(var_list, rmse_mean, kernel+data+'/rmse_plot.pdf', 
-            plot_legend=True, fig = rmse_fig,
+            plot_legend=False, fig = rmse_fig,
             markersize=0, labels=labels, linewidth=1, legend_fontsize=7,
             xlabel=r'$\sigma_w^2$', ylabel=r'RMSE')
 
     nll_fig = plot_samples(var_list, nll_mean, 
-            kernel+data+'/nll_plot.pdf', fig = nll_fig,
+            kernel+data+'/nll_plot.pdf', fig = nll_fig, plot_legend=False,
             markersize=0, labels=labels, linewidth=1, legend_fontsize=7,
             xlabel=r'$\sigma_w^2$', ylabel=r'NLL', fill_between=np.sqrt(nll_var))
     nll_fig = plot_samples(var_list, nll, kernel+data+'/nll_plot.pdf', 
-            plot_legend=True, fig = nll_fig,
+            plot_legend=False, fig = nll_fig,
             markersize=0, labels=labels, linewidth=1, legend_fontsize=7,
             xlabel=r'$\sigma_w^2$', ylabel=r'NLL')
 
     # Find the lowest rmse and corresponding variance, depth and rmse variance
     min_rmse = np.nanmin(rmse_mean)
     idx = np.where(rmse_mean == min_rmse)
+
+    plot_legend_only(labels)
 
     min_rmse_var = (rmse_var[idx])[0]
     var_w = (var_list[idx[1]])[0]
@@ -93,5 +96,6 @@ for data in datasets:
     for kernel in kernels:
         # Latex table formatting
         output = plot_and_return_rmse(data, kernel)
-        print("& $ %.2f \pm %.2f $ & $ %.2f $ & $ %d $" % (output[0], output[1], output[2], output[3]))
+        print("& $ %.2f \pm %.2f $ & $ %.2f $ & $ %d $" % (output[0], output[1],
+            output[2], output[3]))
 

@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import matplotlib.patches as mpatches
 from matplotlib.colors import Normalize
+from matplotlib.ticker import FormatStrFormatter
 from matplotlib import rc
 matplotlib.rcParams['mathtext.fontset'] = 'custom'
 matplotlib.rcParams['mathtext.rm'] = 'Bitstream Vera Sans'
@@ -25,6 +26,28 @@ import numpy as np
 from ..mvn_mixture.diag_mvn_mixture import DiagMVNMixture
 
 
+def plot_legend_only(labels):
+    viridis = cm.viridis 
+    norm = Normalize(vmin = np.log2(1), vmax=np.log2(max(len(labels), 1)))
+
+    fig = plt.figure(figsize=(7,7))
+
+    ax = plt.gca()
+    for i in range(len(labels)):
+        if (((i+1) % 4) == 0) or (i == 0):
+            newlabel = labels[i]
+        else:
+            newlabel = None
+        lines = ax.plot(range(10), range(10), label=newlabel, 
+               color=viridis(norm(np.log2(i+1))))
+    handles = [mpatches.Patch(color=viridis(norm(np.log2(idx+1))), 
+                    label=l) for idx, l in enumerate(labels)]
+    plt.legend(handles=handles, fontsize=50)
+
+    figlegend = plt.figure(figsize=(7,7))
+    plt.figlegend(*ax.get_legend_handles_labels(), loc='upper left', fontsize=20)
+
+    figlegend.savefig('legend.pdf')
 
 def plot_2d_samples(x, y, z, name='samples_2d.pdf'):
     x=np.unique(x)
@@ -78,6 +101,7 @@ def plot_samples(x, y, name='samples.pdf', xlabel=r'$x$', ylabel=r'$y$',
     plt.ylabel(ylabel, fontsize=40)
     ax = plt.gca()
     ax.tick_params(axis = 'both', which = 'major', labelsize = 30)
+    ax.yaxis.set_major_formatter(FormatStrFormatter('%.1f'))
 
     if (plot_legend) and not default_colours:
         handles = [mpatches.Patch(color=viridis(norm(np.log2(idx+1))), 

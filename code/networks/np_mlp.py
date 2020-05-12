@@ -68,6 +68,8 @@ class Mlp(object):
             else:
                 w_init = self.weight_init
                 b_init = self.bias_init
+                w_init.apply_scale = True
+                b_init.apply_scale = True
             if (l == len(self.layer_widths)):
                 scale_w = 1./np.sqrt(self.layer_widths[l-1])
                 w_init = lambda x: np.random.normal(0, scale_w, x)

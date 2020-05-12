@@ -2,6 +2,7 @@ import numpy as np
 import abc
 from scipy.stats import gennorm
 from scipy.special import gamma
+from scipy.stats import laplace
 
 class RceInitialiser(object):
     __metaclass__ = abc.ABCMeta
@@ -111,5 +112,58 @@ class GeneralisedNormal(object):
         D = D/np.sqrt(var)
         
         # Return correctly scaled version of D
-        return D/sqrt_n*std
+        return D/sqrt_n*self.std
+
+class Laplace(object):
+    def __init__(self, apply_scale=True, std=1, mu=0):
+        self.apply_scale    = apply_scale
+        self.std            = std
+        self.mu             = mu
+
+    def __call__(self, shape):
+        if self.apply_scale:
+            sqrt_n = np.sqrt(shape[1])
+        else:
+            sqrt_n = 1
+
+        D = laplace.rvs(size=shape)
+        # Scale to unit variance
+        D = D / np.sqrt(2)
+
+        # Return correctly scaled version of D
+        return D/sqrt_n*self.std + self.mu/sqrt_n**2
+
+class Uniform(object):
+    def __init__(self, apply_scale=True, std=1, mu=0):
+        self.apply_scale    = apply_scale
+        self.std            = std
+        self.mu             = mu
+
+    def __call__(self, shape):
+        if self.apply_scale:
+            sqrt_n = np.sqrt(shape[1])
+        else:
+            sqrt_n = 1
+
+        D = np.random.uniform(-np.sqrt(3), np.sqrt(3), size=shape)
+
+        # Return correctly scaled version of D
+        return D/sqrt_n*self.std + self.mu/sqrt_n**2
+
+class StudentT(object):
+    def __init__(self, apply_scale=True, nu=2.5, mu=0):
+        self.apply_scale    = apply_scale
+        self.nu             = nu
+        self.mu             = mu
+
+    def __call__(self, shape):
+        if self.apply_scale:
+            sqrt_n = np.sqrt(shape[1])
+        else:
+            sqrt_n = 1
+
+        D = np.random.standard_t(self.nu, size=shape)
+
+        # Return correctly scaled version of D
+        return D/sqrt_n + self.mu/sqrt_n**2
 
