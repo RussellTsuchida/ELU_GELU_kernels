@@ -114,6 +114,7 @@ for mode in ['ELU', 'GELU', 'ReLU']:
     norm_list = [0.1, 0.5, 1, 2, 5]
     theta_list = np.linspace(0.001, np.pi-0.001, 500)
     plt.figure(figsize=(7,7))
+    ylabel = r'$\lambda_3$'
     for norm in norm_list:
         # Find the value of sigma that preserves this norm
         s = norm_preserving_s(g, norm)
@@ -129,12 +130,13 @@ for mode in ['ELU', 'GELU', 'ReLU']:
                 lambda_3 = lambda_3_elu(sigma, norm, theta)
             elif mode == 'GELU':
                 lambda_3 = lambda_3_gelu(sigma, norm, theta)
+                ylabel = r'$\lambda_3$ lower bound'
             elif mode == 'ReLU':
                 lambda_3 = (np.pi - theta)/np.pi
             lambda_list[i] = lambda_3
         plt.plot(theta_list, lambda_list, 
                 label=r'$\Vert \mathbf{x} \Vert = ' + str(norm) + '$')
-    plt.ylabel(r'$\lambda_3$', fontsize=40)
+    plt.ylabel(ylabel, fontsize=40)
     plt.xlabel(r'$\theta$', fontsize=40)
     ax = plt.gca()
     ax.tick_params(axis = 'both', which = 'major', labelsize = 30)
