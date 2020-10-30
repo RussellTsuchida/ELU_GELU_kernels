@@ -80,8 +80,8 @@ for act in types:
     plt.close()
 
     # Plot training and testing error
-    plt.plot(np.asarray(range(1,DEPTH)), mse_train, 'k')
-    plt.plot(np.asarray(range(1,DEPTH)), mse_test, 'r')
+    plt.plot(np.asarray(range(1,DEPTH)), train_mse_list, 'k')
+    plt.plot(np.asarray(range(1,DEPTH)), test_mse_list, 'r')
     plt.xlabel(r'$L$', fontsize=40)
     plt.xlim([0, 2*np.pi])
     plt.ylim([0, np.amax(y_test)*1.1])
