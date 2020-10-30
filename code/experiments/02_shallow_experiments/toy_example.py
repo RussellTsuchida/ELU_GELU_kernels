@@ -83,7 +83,6 @@ for act in types:
     plt.plot(np.asarray(range(1,DEPTH)), train_mse_list, 'k')
     plt.plot(np.asarray(range(1,DEPTH)), test_mse_list, 'r')
     plt.xlabel(r'$L$', fontsize=40)
-    plt.xlim([0, 2*np.pi])
     plt.ylim([0, np.amax(y_test)*1.1])
     ax = plt.gca()
     ax.tick_params(axis = 'both', which = 'major', labelsize = 30)
