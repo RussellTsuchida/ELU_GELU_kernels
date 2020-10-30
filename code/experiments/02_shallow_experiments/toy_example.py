@@ -66,8 +66,8 @@ for act in types:
         mean_train, _ = gp.run_inference(x_train, y_train, x_train)
         plt.plot(theta_test, mean, color=viridis(float(l)/DEPTH), lw=2)
         plt.savefig(act + '.pdf')
-        test_mse_list[l] = np.average( (mean - y_test)**2)
-        train_mse_list[l] = np.average( (mean_train - y_train)**2)
+        test_mse_list[l-1] = np.average( (mean - y_test)**2)
+        train_mse_list[l-1] = np.average( (mean_train - y_train)**2)
 
     # Plot the toy plots
     plt.scatter(theta_train, y_train, zorder=10, c='k')
