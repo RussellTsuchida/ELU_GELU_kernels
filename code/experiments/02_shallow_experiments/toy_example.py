@@ -31,12 +31,12 @@ NORM            = 0.5
 theta_train = 2*np.pi*np.random.uniform(0, 1, (NUM_TRAINING, 1)).reshape((-1,1))
 x_train = np.hstack([np.cos(theta_train), np.sin(theta_train)])*NORM
 
-#f = lambda x: np.sin(x)
+f = lambda x: np.sin(x)
 #f = lambda x: signal.sawtooth(x)*2 + 5
 #f = lambda x: x**3 - 4
 #f = lambda x: np.sinc(x)
 #f = lambda x: np.exp(np.abs(x-np.pi))
-f = lambda x: np.tan(x)
+#f = lambda x: np.tan(x)
 
 y_train = (f(theta_train) + np.sqrt(NOISE)\
     *np.random.normal(0,1, theta_train.shape))\
@@ -66,6 +66,10 @@ for act in types:
         mean_train, _ = gp.run_inference(x_train, y_train, x_train)
         plt.plot(theta_test, mean, color=viridis(float(l)/DEPTH), lw=2)
         plt.savefig(act + '.pdf')
+
+        print((mean - y_test).shape)
+        print((mean_train - y_train).shape)
+
         test_mse_list[l-1] = np.average( (mean - y_test)**2)
         train_mse_list[l-1] = np.average( (mean_train - y_train)**2)
 
