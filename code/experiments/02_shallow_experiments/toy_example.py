@@ -49,8 +49,12 @@ y_test = (f(theta_test) + np.sqrt(NOISE)\
     .reshape((-1,1))
 
 viridis = cm.get_cmap('viridis', DEPTH)
+
+
 for act in types:
     print(act)
+    train_mse_list = np.zeros((DEPTH-1,))
+    test_mse_list = np.zeros((DEPTH-1,))
     plt.figure(figsize=(7,7))
     for l in range(1, DEPTH):
         if act == 'relu':
@@ -59,8 +63,13 @@ for act in types:
             wvar = 1.5906**2
         gp = gp_model(act, NOISE, b_0_var=0., w_0_var=wvar,depth=l)
         mean, var = gp.run_inference(x_train, y_train, x_test)
+        mean_train, _ = gp.run_inference(x_train, y_train, x_train)
         plt.plot(theta_test, mean, color=viridis(float(l)/DEPTH), lw=2)
         plt.savefig(act + '.pdf')
+        test_mse_list[l] = np.average( (mean - y_test)**2)
+        train_mse_list[l] = np.average( (mean_train - y_train)**2)
+
+    # Plot the toy plots
     plt.scatter(theta_train, y_train, zorder=10, c='k')
     plt.xlabel(r'$\gamma$', fontsize=40)
     plt.xlim([0, 2*np.pi])
@@ -69,3 +78,15 @@ for act in types:
     ax.tick_params(axis = 'both', which = 'major', labelsize = 30)
     plt.savefig(act + '.pdf')
     plt.close()
+
+    # Plot training and testing error
+    plt.plot(np.asarray(range(1,DEPTH)), mse_train, 'k')
+    plt.plot(np.asarray(range(1,DEPTH)), mse_test, 'r')
+    plt.xlabel(r'$L$', fontsize=40)
+    plt.xlim([0, 2*np.pi])
+    plt.ylim([0, np.amax(y_test)*1.1])
+    ax = plt.gca()
+    ax.tick_params(axis = 'both', which = 'major', labelsize = 30)
+    plt.savefig(act + 'train_test.pdf')
+    plt.close()
+
